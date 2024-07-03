@@ -5,7 +5,7 @@
 <!-- theme meta -->
 <meta name="theme-name" content="quixlab" />
 
-<title>BizMapper</title>
+<title>BizMapperss</title>
 <!-- Favicon icon -->
 <link rel="icon" type="../../template/image/png" sizes="16x16" href="../../template/images/favicon.png">
 <!-- Pignose Calender -->
