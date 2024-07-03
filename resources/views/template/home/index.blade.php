@@ -55,13 +55,13 @@
                             <div class="w-100 p-3">
                                 <ul>
                                     <li>
-                                        <h6 class="text-white">Total Application: <span class="font-lg">{{ $allApplication }}</span></h6>
+                                        <h6 class="text-white">Total Applications: <span class="font-lg">{{ $allApplication }}</span></h6>
                                     </li>
                                     <li class="bg-transparent border-0">
-                                        <h6 class="text-white">Pending Application: <span class="font-lg">{{ $pendingApplication }}</span></h6>
+                                        <h6 class="text-white">Pending Applications: <span class="font-lg">{{ $pendingApplication }}</span></h6>
                                     </li>
                                     <li class="bg-transparent border-0">
-                                        <h6 class="text-white">Total Ad Account: <span class="font-lg">{{ $allAdAccount }}</span></h6>
+                                        <h6 class="text-white">Total Ad Accounts: <span class="font-lg">{{ $allAdAccount }}</span></h6>
                                     </li>
 
                                 </ul>
