@@ -13,6 +13,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Add known_hosts
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.KNOWN_HOSTS_ENTRY }}" >> ~/.ssh/known_hosts
+
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.5.3
       with:
@@ -20,4 +25,4 @@ jobs:
 
     - name: Deploy to Hostinger
       run: |
-        ssh -o StrictHostKeyChecking=no u814070959@89.117.27.149 "cd /home/u814070959/public_html/bizcrm.bizmappers.com/public && git pull origin main && composer install && php artisan migrate"
+        ssh -p 65002 -o StrictHostKeyChecking=no u814070959@89.117.27.149 "cd /home/u814070959/public_html/bizcrm.bizmappers.com/public && git pull origin main && composer install && php artisan migrate"
