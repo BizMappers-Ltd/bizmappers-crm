@@ -20,4 +20,4 @@ jobs:
 
     - name: Deploy to Hostinger
       run: |
-        ssh -o StrictHostKeyChecking=no u814070959@89.117.27.149 "cd /home/u814070959/public_html/bizcrm.bizmappers.com && git pull origin main && composer install && php artisan migrate"
+        ssh -o StrictHostKeyChecking=no u814070959@89.117.27.149 "cd /home/u814070959/public_html/bizcrm.bizmappers.com/public && git pull origin main && composer install && php artisan migrate"
