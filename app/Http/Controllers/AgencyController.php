@@ -97,7 +97,7 @@ class AgencyController extends Controller
 
         SystemNotification::create([
             'notification' => "A new agency {$request['agency_name']} created by " . auth()->user()->name,
-            
+
         ]);
 
 
@@ -123,19 +123,29 @@ class AgencyController extends Controller
     {
         $agency = Agencies::find($id);
 
-        $agency->agency_name = $request->agency_name;
-        $agency->location = $request->location;
-        $agency->commission_type = $request->commission_type;
-        $agency->dollar_rate = $request->dollar_rate;
-        $agency->percentage_rate = $request->percentage_rate;
-        $agency->ad_account_type = $request->ad_account_type;
-
-
-        $agency->save();
+        if ($request->has('own_commission_type')) {
+            $agency->update([
+                'agency_name' => $request['agency_name'],
+                'location' => $request['location'],
+                'commission_type' => $request['own_commission_type'],
+                'dollar_rate' => $request['dollar_rate'],
+                'percentage_rate' => $request['percentage_rate'],
+                'ad_account_type' => $request['ad_account_type'],
+            ]);
+        } else {
+            $agency->update([
+                'agency_name' => $request['agency_name'],
+                'location' => $request['location'],
+                'commission_type' => $request['commission_type'],
+                'dollar_rate' => $request['dollar_rate'],
+                'percentage_rate' => $request['percentage_rate'],
+                'ad_account_type' => $request['ad_account_type'],
+            ]);
+        }
 
         SystemNotification::create([
             'notification' => "Agency {$request['agency_name']} updated by " . auth()->user()->name,
-            
+
         ]);
 
         // Redirect to success page or perform other actions
@@ -150,7 +160,7 @@ class AgencyController extends Controller
 
         SystemNotification::create([
             'notification' => "Agency {$agency->agency_name} removed by " . auth()->user()->name,
-            
+
         ]);
 
         return redirect()->route('all-agency')->with('success', 'Ad Account Agency deleted successfully.');

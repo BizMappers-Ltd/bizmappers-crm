@@ -123,7 +123,7 @@ class RefillController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (auth()->user()->role !== 'admin') {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'manager') {
             return redirect('/');
         }
 

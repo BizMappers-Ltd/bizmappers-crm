@@ -3,16 +3,8 @@
 
 <head>
     @include('template.home.layouts.head')
+    @include('template.home.custom_styles.custom_style')
 
-    <style>
-        .text-black {
-            color: black;
-        }
-
-        .font-sm {
-            font-size: 13px;
-        }
-    </style>
 </head>
 
 <body>
@@ -30,7 +22,7 @@
                             <div class="d-flex align-items-center justify-content-between mb-3">
                                 <h4 class="card-title mr-4 mt-2">Detailed refill information of
                                     {{ $refill->adAccount->ad_acc_name }}</h4>
-                                    @if(auth()->user()->role == 'admin')
+                                    @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager')
                                 <a href="{{ route('refills.edit', $refill->id) }}">
                                     <button class="btn btn-sm btn-secondary text-white">Edit Info<i
                                             class="fa fa-pencil color-muted m-r-5 ml-2"></i></button>

@@ -22,7 +22,7 @@
                                 <h4 class="card-title mr-4 mt-2">Detailed user information of
                                     {{ $user->name }}
                                 </h4>
-                                @if(auth()->user()->role == 'admin')
+                                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager')
                                 <a href="{{ route('client.edit', $user->id) }}">
                                     <button class="btn btn-sm btn-secondary text-white">Edit Info<i class="fa fa-pencil color-muted m-r-5 ml-2"></i></button>
                                 </a>
@@ -58,19 +58,19 @@
                         <div class="card-body font-sm">
 
                             <h4 class="card-title mb-3">Ad Account List</h4>
-                            
+
                             <div class="basic-list-group">
-                                    <ul class="list-group">
-                                        @foreach ($adAccounts as $adAccount)
-                                        <li class="list-group-item">
-                                            {{ $adAccount->ad_acc_name }}
-                                            
-                                        </li>
-                                        @endforeach
+                                <ul class="list-group">
+                                    @foreach ($adAccounts as $adAccount)
+                                    <li class="list-group-item">
+                                        {{ $adAccount->ad_acc_name }}
 
-                                    </ul>
+                                    </li>
+                                    @endforeach
 
-                                </div>
+                                </ul>
+
+                            </div>
                         </div>
                     </div>
                 </div>

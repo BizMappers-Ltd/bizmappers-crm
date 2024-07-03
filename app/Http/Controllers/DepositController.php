@@ -12,8 +12,6 @@ use App\Models\SystemNotification;
 class DepositController extends Controller
 {
 
-
-
     public function index()
     {
         $deposits = Deposit::orderBy('created_at', 'desc')->get();
@@ -56,7 +54,7 @@ class DepositController extends Controller
             'amount_usd' => $request->amount_usd,
             'rate_bdt' => $request->rate_bdt,
             'amount_bdt' => $bdt,
-            'status' => 'received',
+            'status' => 'pending',
         ]);
 
         SystemNotification::create([
@@ -152,8 +150,4 @@ class DepositController extends Controller
 
         return view('template.home.deposit.average_usd_rate', compact('averageRates'));
     }
-
-    
-
 }
-

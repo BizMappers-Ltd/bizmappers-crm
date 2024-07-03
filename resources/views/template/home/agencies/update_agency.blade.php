@@ -46,7 +46,12 @@
                         <input name="location" value="{{ $agency->location }}" type="text" placeholder="Location" class="form-control rounded">
                     </div>
 
-                    <div>
+                    <div class="form-check my-3 {{ $agency->commission_type !== 'Own Account' ? 'd-none' : '' }}">
+                        <label class="form-check-label">
+                            <input type="checkbox" {{ $agency->commission_type === 'Own Account' ? 'checked' : '' }} name="own_commission_type" class="form-check-input" id="own-account-checkbox" value="Own Account">Own Account</label>
+                    </div>
+
+                    <div id="commission-type-sect">
                         <label class="col-form-label">Commission Type:</label>
                         <select name="commission_type" id="commission_type" class="form-control rounded">
                             <option value="Dollar Rate" {{ $agency->commission_type === 'Dollar Rate' ? 'selected' : '' }}>Dollar Rate</option>

@@ -14,7 +14,7 @@
                     <i class="fa-regular fa-file"></i><span class="nav-text">Applications</span>
                 </a>
                 <ul aria-expanded="false">
-                    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'employee')
+                    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'manager' || auth()->user()->role == 'employee')
                     <li><a href="{{ route('ad-account-application') }}" aria-expanded="false">
                             New
                         </a></li>

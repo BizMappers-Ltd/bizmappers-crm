@@ -68,7 +68,7 @@
 
                     <div>
                         <label class="col-form-label">Email:</label>
-                        <input id="email" class="form-control rounded" type="email" name="email" :value="old('email')" placeholder="Email" required autocomplete="email" />
+                        <input id="email" class="form-control rounded" type="email" name="email" placeholder="Email" autocomplete="email" />
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
 

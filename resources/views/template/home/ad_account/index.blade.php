@@ -53,7 +53,7 @@
                                 <th>Doller Rate</th>
                                 <th>Responsible</th>
                                 <th></th>
-                                @if (auth()->user()->role == 'admin' || auth()->user()->role == 'employee')
+                                @if (auth()->user()->role == 'admin' || auth()->user()->role == 'manager' || auth()->user()->role == 'employee')
                                 <th>Status</th>
                                 @endif
 
@@ -99,7 +99,7 @@
                                     @endif
 
                                 </td>
-                                @if (auth()->user()->role == 'admin' || auth()->user()->role == 'employee')
+                                @if (auth()->user()->role == 'admin' || auth()->user()->role == 'manager' || auth()->user()->role == 'employee')
                                 <td>
                                     <form action="{{ route('ad-account.updateStatus', $adAccount->id) }}" method="post">
                                         @csrf

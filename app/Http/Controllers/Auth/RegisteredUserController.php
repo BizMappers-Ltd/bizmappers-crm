@@ -146,7 +146,6 @@ class RegisteredUserController extends Controller
             'phone' => ['required', 'string', 'max:15'],
             'business_type' => ['required', 'string', 'max:255'],
             'business_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'confirmed', 'min:8'],
         ]);
 

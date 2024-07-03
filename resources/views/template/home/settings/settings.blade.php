@@ -81,9 +81,9 @@
                                         @if($value->setting_name == 'Refill Payment Method')
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <div>
-                                                <p> {{ $value->value }} </p>
+                                                <span> {{ $value->value }} </span><br>
                                                 @if(isset($value->details))
-                                                <p class="font-sm">( {{ $value->details }} )</p>
+                                                <span class="font-sm">( {{ $value->details }} )</span>
                                                 @endif
                                             </div>
                                             <form action="{{ route('setting.destroyPaymentMethod', $value->id) }}" method="POST" style="display:inline-block;">

@@ -11,10 +11,10 @@ use App\Models\SystemNotification;
 
 class UserController extends Controller
 {
- 
+
     public function indexClients()
     {
-        if (auth()->user()->role !== 'admin' || auth()->user()->role !== 'manager') {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'manager' &&  auth()->user()->role !== 'employee') {
             return redirect('/');
         }
 
@@ -23,6 +23,9 @@ class UserController extends Controller
     }
     public function showClient($id)
     {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'manager' &&  auth()->user()->role !== 'employee') {
+            return redirect('/');
+        }
         $user = User::findOrFail($id);
         $adAccounts = AdAccount::where('client_id', $id)->get();
         return view('template.home.users.client.show', compact('user', 'adAccounts'));
@@ -30,7 +33,7 @@ class UserController extends Controller
 
     public function editClient($id)
     {
-        if (auth()->user()->role !== 'admin') {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'manager') {
             return redirect('/');
         }
         $client = User::findOrFail($id);
@@ -38,7 +41,7 @@ class UserController extends Controller
     }
     public function updateClient(Request $request, $id)
     {
-        if (auth()->user()->role !== 'admin') {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'manager') {
             return redirect('/');
         }
 
@@ -113,7 +116,7 @@ class UserController extends Controller
 
     public function indexEmployees()
     {
-        if (auth()->user()->role !== 'admin' || auth()->user()->role !== 'manager') {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'manager') {
             return redirect('/');
         }
         $users = User::where('role', 'employee')->get();
@@ -121,7 +124,7 @@ class UserController extends Controller
     }
     public function editEmployee($id)
     {
-        if (auth()->user()->role !== 'admin') {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'manager') {
             return redirect('/');
         }
         $employee = User::findOrFail($id);
@@ -129,7 +132,7 @@ class UserController extends Controller
     }
     public function updateEmployee(Request $request, $id)
     {
-        if (auth()->user()->role !== 'admin') {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'manager') {
             return redirect('/');
         }
 

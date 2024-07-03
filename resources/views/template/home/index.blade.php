@@ -95,7 +95,7 @@
                                         <h6 class="text-white">Current Month Deposit: <span class="font-lg">${{ $totalDeposit }}</span></h6>
                                     </li>
                                     <li>
-                                        <h6 class="text-white">Current Month Average Rate: <span class="font-lg">৳{{ $averageRate }}</span></h6>
+                                        <h6 class="text-white">Current Month Average Rate: <span class="font-lg">৳{{ number_format($averageRate, 2) }}</span></h6>
                                     </li>
                                     <li class="     
                                     ">
