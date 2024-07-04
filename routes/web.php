@@ -67,6 +67,8 @@ Route::patch('ad-account-application/{id}/status', [AdAccountController::class, 
 
 Route::get('/clients/{user}/ad-account', [AdAccountController::class, 'ad_account_id'])->middleware(['auth', 'verified'])->name('adaccount.adaccount');
 
+Route::get('ad-accounts/load-more', [AdAccountController::class, 'loadMore'])->name('ad-accounts.load-more');
+
 
 
 Route::post('ad_account/{id}/transfer', [AdAccountController::class, 'transfer'])->middleware(['auth', 'verified'])->name('ad_account.transfer');

@@ -22,8 +22,18 @@ class AdAccountController extends Controller
                 ->get();
             return view('template.home.ad_account.index', compact('adAccounts'));
         } else
-            $adAccounts = AdAccount::orderBy('created_at', 'desc')->get();
+            $adAccounts = AdAccount::orderBy('created_at', 'desc')->paginate(50);
         return view('template.home.ad_account.index', compact('adAccounts'));
+    }
+
+    public function loadMore(Request $request)
+    {
+        if ($request->ajax()) {
+            $page = $request->page;
+            $adAccounts = AdAccount::orderBy('created_at', 'desc')->paginate(50, ['*'], 'page', $page);
+            return view('template.home.ad_account.load_more', compact('adAccounts'))->render();
+        }
+        return response()->json(['message' => 'Bad Request'], 400);
     }
 
     public function account()
@@ -138,7 +148,7 @@ class AdAccountController extends Controller
 
     public function edit($id)
     {
-        if (auth()->user()->role !== 'admin') {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'manager') {
             return redirect('/');
         }
         $adAccount = AdAccount::findOrFail($id);
@@ -188,13 +198,13 @@ class AdAccountController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-            SystemNotification::create([
-                'notification' => "Ad account {$request->ad_acc_name} closed by " . auth()->user()->name,
-            ]);
+        SystemNotification::create([
+            'notification' => "Ad account {$request->ad_acc_name} closed by " . auth()->user()->name,
+        ]);
 
         return view('template.home.ad_account.myaccount', compact('adAccounts'));
     }
-    
+
     public function active(Request $request, $id)
     {
         $adAccount = AdAccount::findOrFail($id);
@@ -206,9 +216,9 @@ class AdAccountController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-            SystemNotification::create([
-                'notification' => "Ad account {$request->ad_acc_name} activited by " . auth()->user()->name,
-            ]);
+        SystemNotification::create([
+            'notification' => "Ad account {$request->ad_acc_name} activited by " . auth()->user()->name,
+        ]);
         return view('template.home.ad_account.myaccount', compact('adAccounts'));
     }
 
@@ -234,7 +244,7 @@ class AdAccountController extends Controller
         }
         $request->validate([
             'status' => 'required|string|in:pending,in-review,approved,canceled,rejected',
-            
+
         ]);
 
         $adAccount = AdAccount::findOrFail($id);
@@ -262,7 +272,7 @@ class AdAccountController extends Controller
                 ->get();
             return view('template.home.ad_account.index', compact('adAccounts'));
         } else
-            $adAccounts = AdAccount::where('status', 'pending')->orderBy('created_at', 'desc')->get();
+            $adAccounts = AdAccount::where('status', 'pending')->orderBy('created_at', 'desc')->paginate(1);
         return view('template.home.ad_account.index', compact('adAccounts'));
     }
     public function showApprovedAdAccounts()
@@ -275,7 +285,7 @@ class AdAccountController extends Controller
                 ->get();
             return view('template.home.ad_account.index', compact('adAccounts'));
         } else
-            $adAccounts = AdAccount::where('status', 'approved')->orderBy('created_at', 'desc')->get();
+            $adAccounts = AdAccount::where('status', 'approved')->orderBy('created_at', 'desc')->paginate(1);
         return view('template.home.ad_account.index', compact('adAccounts'));
     }
 
