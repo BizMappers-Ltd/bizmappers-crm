@@ -10,6 +10,9 @@ class SettingController extends Controller
 {
     public function show()
     {
+        if (auth()->user()->role !== 'admin') {
+            return redirect('/');
+        }
         $values = Settings::all();
         $defaultRate = Settings::where('setting_name', 'Default Dollar Rate')->first();
         if ($defaultRate) {
@@ -43,7 +46,6 @@ class SettingController extends Controller
 
     public function storePaymentMethod(Request $request)
     {
-
         Settings::create(
             [
                 'setting_name' => 'Refill Payment Method',
@@ -52,7 +54,7 @@ class SettingController extends Controller
             ]
         ); // Use model for creation
 
-        return redirect()->route('settings')->with('success', 'Data saved successfully!');
+        return redirect()->route('settings', ['tab' => 'refill'])->with('success', 'Data saved successfully!');
     }
 
     public function destroyPaymentMethod($id)
@@ -60,7 +62,7 @@ class SettingController extends Controller
         $paymentMethod = Settings::findOrFail($id);
         $paymentMethod->delete();
 
-        return redirect()->route('settings')->with('success', 'Data deleted successfully!');
+        return redirect()->route('settings', ['tab' => 'refill'])->with('success', 'Data deleted successfully!');
     }
 
     public function storeVendor(Request $request)
@@ -77,15 +79,14 @@ class SettingController extends Controller
         ]);
 
         // Redirect back to the settings page with success message
-        return redirect()->route('settings')->with('success', 'Vendor saved successfully!');
+        return redirect()->route('settings', ['tab' => 'vendor'])->with('success', 'Vendor saved successfully!');
     }
-
 
     public function destroyVendor($id)
     {
         $vendor = Settings::findOrFail($id);
         $vendor->delete();
 
-        return redirect()->route('settings')->with('success', 'Data deleted successfully!');
+        return redirect()->route('settings', ['tab' => 'vendor'])->with('success', 'Data deleted successfully!');
     }
 }

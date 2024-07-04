@@ -26,8 +26,6 @@
             Sidebar end
         ***********************************-->
 
-
-
         <!--**********************************
             Content body start
         ***********************************-->
@@ -86,20 +84,20 @@
                                                 <span class="font-sm">( {{ $value->details }} )</span>
                                                 @endif
                                             </div>
-                                            <form action="{{ route('setting.destroyPaymentMethod', $value->id) }}" method="POST" style="display:inline-block;">
+                                            <form action="{{ route('setting.destroyPaymentMethod', $value->id) }}?tab=refill" method="POST" style="display:inline-block;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm bg-transparent" onclick="return confirm('Are you sure you want to delete this Payment Method?')"><i class="fa-solid fa-xmark"></i></button>
+                                                <button type="submit" class="btn btn-sm bg-transparent" onclick="return confirm('Are you sure you want to delete this Payment Method?')">
+                                                    <i class="fa-solid fa-xmark"></i>
+                                                </button>
                                             </form>
                                         </li>
-
                                         @endif
                                         @endforeach
-
                                     </ul>
 
                                 </div>
-                                <form action="{{ route('setting.storePaymentMethod') }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('setting.storePaymentMethod') }}?tab=refill" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="p-t-15">
                                         <b class="col-form-label">Add Refill Payment Method:</b>
@@ -123,19 +121,20 @@
                                         @if($value->setting_name == 'Vendor')
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             {{ $value->value }}
-                                            <form action="{{ route('setting.destroyVendor', $value->id) }}" method="POST" style="display:inline-block;">
+                                            <form action="{{ route('setting.destroyVendor', $value->id) }}?tab=vendor" method="POST" style="display:inline-block;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm bg-transparent" onclick="return confirm('Are you sure you want to delete this Vendor?')">
                                                     <i class="fa-solid fa-xmark"></i>
                                                 </button>
                                             </form>
+
                                         </li>
                                         @endif
                                         @endforeach
                                     </ul>
                                 </div>
-                                <form action="{{ route('setting.storeVendor') }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('setting.storeVendor') }}?tab=vendor" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="p-t-15">
                                         <label class="col-form-label">Vendor:</label>
@@ -145,8 +144,8 @@
                                         <input type="submit" name="submit" value="Add" class="btn btn-sm btn-primary">
                                     </div>
                                 </form>
-                            </div>
 
+                            </div>
 
                         </div>
                     </div>
@@ -157,7 +156,6 @@
         <!--**********************************
             Content body end
         ***********************************-->
-
 
         <!--**********************************
             Footer start
@@ -176,8 +174,21 @@
     ***********************************-->
     @include('template.home.layouts.scripts')
 
-
     @include('template.home.custom_scripts.refill_application_script')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var activeTab = urlParams.get('tab');
+            if (activeTab) {
+                var tabElement = document.querySelector('.nav-link[href="#' + activeTab + '"]');
+                if (tabElement) {
+                    tabElement.click();
+                }
+            }
+        });
+    </script>
+
 </body>
 
 </html>
