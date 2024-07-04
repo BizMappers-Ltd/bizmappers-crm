@@ -272,7 +272,7 @@ class AdAccountController extends Controller
                 ->get();
             return view('template.home.ad_account.index', compact('adAccounts'));
         } else
-            $adAccounts = AdAccount::where('status', 'pending')->orderBy('created_at', 'desc')->paginate(1);
+            $adAccounts = AdAccount::where('status', 'pending')->orderBy('created_at', 'desc')->paginate(50);
         return view('template.home.ad_account.index', compact('adAccounts'));
     }
     public function showApprovedAdAccounts()
@@ -285,12 +285,9 @@ class AdAccountController extends Controller
                 ->get();
             return view('template.home.ad_account.index', compact('adAccounts'));
         } else
-            $adAccounts = AdAccount::where('status', 'approved')->orderBy('created_at', 'desc')->paginate(1);
+            $adAccounts = AdAccount::where('status', 'approved')->orderBy('created_at', 'desc')->paginate(50);
         return view('template.home.ad_account.index', compact('adAccounts'));
     }
-
-
-
 
 
     public function transfer(Request $request, $id)

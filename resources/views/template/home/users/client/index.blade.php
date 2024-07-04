@@ -40,26 +40,21 @@
                                 <th>Business Name</th>
                                 <th>Phone</th>
                                 <th>Email</th>
-
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="clientsTableBody">
                             @foreach ($users as $user)
                             <tr>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->business_name }}</td>
                                 <td>{{ $user->phone }}</td>
                                 <td>{{ $user->email }}</td>
-
-
                                 <td>
-                                    
                                     <span class="d-flex align-items-center">
                                         <a href="{{ route('adaccount.adaccount', $user->id) }}" data-toggle="tooltip" data-placement="top" title="Add New Ad Account">
                                             <i class="fa fa-plus color-muted m-r-5 ml-2"></i>
                                         </a>
-
                                         <a href="{{ route('client.show', $user->id) }}" data-toggle="tooltip" data-placement="top" title="View">
                                             <i class="fa fa-eye color-muted m-r-5 ml-3"></i>
                                         </a>
@@ -68,12 +63,10 @@
                                             <i class="fa fa-pencil color-muted m-r-5 ml-3"></i>
                                         </a>
                                         @endif
-
                                         @if (auth()->user()->role == 'admin')
                                         <div class="basic-dropdown ml-2">
                                             <div class="dropdown">
                                                 <i class="fa-solid fa-ellipsis btn btn-sm" data-toggle="dropdown"></i>
-
                                                 <div class="dropdown-menu">
                                                     <a class="dropdown-item">
                                                         <form action="{{ route('client.destroy', $user->id) }}" method="POST" style="display:inline-block;">
@@ -82,21 +75,21 @@
                                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this Client?')">Delete</button>
                                                         </form>
                                                     </a>
-
                                                 </div>
                                             </div>
                                         </div>
                                         @endif
                                     </span>
-                                    
                                 </td>
-
                             </tr>
                             @endforeach
                         </tbody>
-
                     </table>
-
+                    @if ($users->hasMorePages())
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary" id="loadMoreButton">Load More</button>
+                    </div>
+                    @endif
                 </div>
             </div>
 
@@ -106,6 +99,41 @@
     @include('template.home.layouts.footer')
     @include('template.home.layouts.scripts')
     @include('template.home.custom_scripts.search_script')
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let page = 2; // Start from the second page since the first page is already loaded
+
+            $('#loadMoreButton').click(function() {
+                $.ajax({
+                    url: "{{ route('clients.load-more') }}",
+                    type: 'GET',
+                    data: {
+                        page: page
+                    },
+                    beforeSend: function() {
+                        $('#loadMoreButton').text('Loading...');
+                    },
+                    success: function(response) {
+                        if (response) {
+                            $('#clientsTableBody').append(response);
+                            page++;
+                            $('#loadMoreButton').text('Load More');
+
+                            // Hide the button if no more pages to load
+                            if (page > {{$users->lastPage()}}) {$('#loadMoreButton').hide();}
+                        } else {
+                            $('#loadMoreButton').text('No More Records');
+                        }
+                    },
+                    error: function() {
+                        $('#loadMoreButton').text('Load More');
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 

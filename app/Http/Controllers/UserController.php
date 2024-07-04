@@ -18,9 +18,20 @@ class UserController extends Controller
             return redirect('/');
         }
 
-        $users = User::where('role', 'customer')->get();
+        $users = User::where('role', 'customer')->orderBy('created_at', 'desc')->paginate(50);
         return view('template.home.users.client.index', compact('users'));
     }
+
+    public function loadMoreClients(Request $request)
+    {
+        if ($request->ajax()) {
+            $page = $request->page;
+            $users = User::where('role', 'customer')->orderBy('created_at', 'desc')->paginate(50, ['*'], 'page', $page);
+            return view('template.home.users.client.load_more', compact('users'))->render();
+        }
+        return response()->json(['message' => 'Bad Request'], 400);
+    }
+
     public function showClient($id)
     {
         if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'manager' &&  auth()->user()->role !== 'employee') {

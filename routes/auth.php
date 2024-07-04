@@ -68,6 +68,8 @@ Route::get('clients/{id}/edit', [UserController::class, 'editClient'])->middlewa
 Route::put('clients/{id}', [UserController::class, 'updateClient'])->middleware(['auth', 'verified'])->name('client.update');
 Route::delete('clients/{id}', [UserController::class, 'destroyClient'])->middleware(['auth', 'verified'])->name('client.destroy');
 
+Route::get('clients/load-more', [UserController::class, 'loadMoreClients'])->name('clients.load-more');
+
 
 // Registration route for Admins
 Route::get('admins', [UserController::class, 'indexAdmins'])->middleware(['auth', 'verified'])->name('user.admin');
