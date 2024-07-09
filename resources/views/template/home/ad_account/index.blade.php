@@ -59,6 +59,7 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
+                        
                         <tbody id="adAccountsTableBody">
                             @foreach ($adAccounts as $adAccount)
                             <tr>
@@ -68,7 +69,7 @@
                                 @endif
                                 <td>
                                     <span>{{ $adAccount->ad_acc_name }}</span><br>
-                                    <span class="font-sm mt-1">{{ $adAccount->ad_acc_id }}</span>
+                                    <span class="font-sm mt-1">ID: {{ $adAccount->ad_acc_id }}</span>
                                 </td>
                                 <td>{{ $adAccount->agency->agency_name }}</td>
                                 <td>{{ $adAccount->dollar_rate }}৳</td>
@@ -163,7 +164,7 @@
 
             $('#loadMoreButton').click(function() {
                 $.ajax({
-                    url: "{{ route('ad-accounts.load-more') }}",
+                    url: "{{ $loadMore }}",
                     type: 'GET',
                     data: {
                         page: page

@@ -1,7 +1,7 @@
 @foreach ($adAccounts as $adAccount)
 <tr>
     <td>{{ $adAccount->created_at->format('j F Y') }}</td>
-    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'employee')
+    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'manager' || auth()->user()->role == 'employee')
     <td>{{ $adAccount->client->name }}</td>
     @endif
     <td>

@@ -94,3 +94,5 @@ Route::post('register/employee', [RegisteredUserController::class, 'storeEmploye
 Route::get('employees/{id}/edit', [UserController::class, 'editEmployee'])->middleware(['auth', 'verified'])->name('employee.edit');
 Route::put('employees/{id}', [UserController::class, 'updateEmployee'])->middleware(['auth', 'verified'])->name('employee.update');
 Route::delete('employees/{id}', [UserController::class, 'destroyEmployee'])->middleware(['auth', 'verified'])->name('employee.destroy');
+
+Route::put('users/{id}/updateRole', [UserController::class, 'updateRole'])->middleware(['auth', 'verified'])->name('user.updateRole');

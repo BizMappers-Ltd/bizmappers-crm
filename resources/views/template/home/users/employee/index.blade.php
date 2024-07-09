@@ -54,7 +54,7 @@
 
 
                                 <td>
-                                    
+
                                     <span class="d-flex align-items-center">
                                         <a href="{{ route('employee.edit', $user->id) }}" data-toggle="tooltip" data-placement="top" title="Edit">
                                             <i class="fa fa-pencil color-muted m-r-5 ml-3"></i>
@@ -72,12 +72,16 @@
                                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this Employee?')">Delete</button>
                                                         </form>
                                                     </a>
+                                                    <a class="dropdown-item">
+                                                        <!-- Button trigger modal -->
+                                                        <button type="button" class="btn btn-sm btn-primary change-role-btn" data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}" data-user-role="{{ $user->role }}">Change Role</button>
+                                                    </a>
 
                                                 </div>
                                             </div>
                                         </div>
                                     </span>
-                                    
+
                                 </td>
 
                             </tr>
@@ -87,14 +91,60 @@
                     </table>
 
                 </div>
+
             </div>
 
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="changeRoleModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Change Role</h5>
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="changeRoleForm" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="d-flex">
+                                <select name="role" id="roleSelect" class="form-control rounded mr-1">
+                                    <option value="admin">Admin</option>
+                                    <option value="manager">Manager</option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-secondary text-white" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     @include('template.home.layouts.footer')
     @include('template.home.layouts.scripts')
     @include('template.home.custom_scripts.search_script')
+
+    <script>
+        $(document).ready(function() {
+            $('.change-role-btn').on('click', function() {
+                var userId = $(this).data('user-id');
+                var userName = $(this).data('user-name');
+                var userRole = $(this).data('user-role');
+
+                $('#changeRoleModal .modal-title').text('Change Role for ' + userName);
+                $('#roleSelect').val(userRole);
+                $('#changeRoleForm').attr('action', '/users/' + userId + '/updateRole');
+
+                $('#changeRoleModal').modal('show');
+            });
+        });
+    </script>
 
 </body>
 

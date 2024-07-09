@@ -18,7 +18,9 @@ class UserController extends Controller
             return redirect('/');
         }
 
-        $users = User::where('role', 'customer')->orderBy('created_at', 'desc')->paginate(50);
+        $users = User::where('role', 'customer')
+            ->orderBy('created_at', 'desc')
+            ->paginate(50);
         return view('template.home.users.client.index', compact('users'));
     }
 
@@ -87,7 +89,9 @@ class UserController extends Controller
         if (auth()->user()->role !== 'admin') {
             return redirect('/');
         }
-        $users = User::where('role', 'manager')->get();
+        $users = User::where('role', 'manager')
+            ->orderby('created_at', 'desc')
+            ->get();
         return view('template.home.users.manager.index', compact('users'));
     }
     public function editManager($id)
@@ -130,7 +134,9 @@ class UserController extends Controller
         if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'manager') {
             return redirect('/');
         }
-        $users = User::where('role', 'employee')->get();
+        $users = User::where('role', 'employee')
+            ->orderby('created_at', 'desc')
+            ->get();
         return view('template.home.users.employee.index', compact('users'));
     }
     public function editEmployee($id)
@@ -169,13 +175,14 @@ class UserController extends Controller
 
 
 
-
     public function indexAdmins()
     {
         if (auth()->user()->role !== 'admin') {
             return redirect('/');
         }
-        $users = User::where('role', 'admin')->get();
+        $users = User::where('role', 'admin')
+            ->orderby('created_at', 'desc')
+            ->get();
         return view('template.home.users.admin.index', compact('users'));
     }
     public function editAdmin($id)
@@ -210,5 +217,25 @@ class UserController extends Controller
         $admin->delete();
 
         return redirect()->route('user.admin')->with('success', 'Admin deleted successfully.');
+    }
+
+
+    public function updateRole(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $user->update([
+            'role' => $request->role,
+        ]);
+
+        switch ($request->role) {
+            case 'admin':
+                return redirect()->route('user.admin')->with('success', "Role for {$user->name} changed successfully to {$request->role}.");
+            case 'employee':
+                return redirect()->route('user.employee')->with('success', "Role for {$user->name} changed successfully to {$request->role}.");
+            case 'manager':
+                return redirect()->route('user.manager')->with('success', "Role for {$user->name} changed successfully to {$request->role}.");
+            default:
+                return redirect()->back()->with('error', 'Invalid role selected.');
+        }
     }
 }
