@@ -29,9 +29,15 @@
                 </div>
 
                 <!-- Search Field -->
-                <div class="mb-3 w-25">
+                <div class="mb-1 w-25">
                     <input type="text" id="searchInput" class="form-control rounded" placeholder="Search...">
                 </div>
+
+                @if ($adAccounts->hasMorePages())
+                <div class="mb-3">
+                    <button class="btn btn-sm btn-secondary text-white" id="viewAllButton">View All</button>
+                </div>
+                @endif
 
                 @if (session('success'))
                 <div class="alert alert-success">
@@ -59,7 +65,7 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        
+
                         <tbody id="adAccountsTableBody">
                             @foreach ($adAccounts as $adAccount)
                             <tr>
@@ -163,6 +169,14 @@
             let page = 2; // Start from the second page since the first page is already loaded
 
             $('#loadMoreButton').click(function() {
+                loadMore();
+            });
+
+            $('#viewAllButton').click(function() {
+                viewAll();
+            });
+
+            function loadMore() {
                 $.ajax({
                     url: "{{ $loadMore }}",
                     type: 'GET',
@@ -178,14 +192,36 @@
                             page++;
                             $('#loadMoreButton').text('Load More');
 
-                            // Hide the button if no more pages to load
-                            if (page > {{$adAccounts-> lastPage()}}) {$('#loadMoreButton').hide();}
+                            // Hide the buttons if no more pages to load
+                            if (page > {{$adAccounts->lastPage()}}) {
+                                $('#loadMoreButton').hide();
+                                $('#viewAllButton').hide();
+                            }
                         } else {
                             $('#loadMoreButton').text('No More Records');
                         }
                     }
                 });
-            });
+            }
+
+            function viewAll() {
+                $.ajax({
+                    url: "{{ $loadAll }}",
+                    type: 'GET',
+                    beforeSend: function() {
+                        $('#viewAllButton').text('Loading...');
+                    },
+                    success: function(response) {
+                        if (response) {
+                            $('#adAccountsTableBody').html(response);
+                            $('#loadMoreButton').hide();
+                            $('#viewAllButton').hide();
+                        } else {
+                            $('#viewAllButton').text('No Records');
+                        }
+                    }
+                });
+            }
         });
     </script>
 

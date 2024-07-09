@@ -18,14 +18,16 @@ class AdAccountController extends Controller
     {
         if (auth()->user()->role == 'customer') {
             $loadMore = route('ad-accounts.load-more');
+            $loadAll = route('ad-accounts.load-all');
             $adAccounts = AdAccount::where('client_id', auth()->user()->id)
                 ->orderBy('created_at', 'desc')
                 ->paginate(50);
-            return view('template.home.ad_account.index', compact('adAccounts', 'loadMore'));
+            return view('template.home.ad_account.index', compact('adAccounts', 'loadMore', 'loadAll'));
         } else
             $loadMore = route('ad-accounts.load-more');
+        $loadAll = route('ad-accounts.load-all');
         $adAccounts = AdAccount::orderBy('created_at', 'desc')->paginate(50);
-        return view('template.home.ad_account.index', compact('adAccounts', 'loadMore'));
+        return view('template.home.ad_account.index', compact('adAccounts', 'loadMore', 'loadAll'));
     }
 
     public function loadMore(Request $request)
@@ -38,6 +40,21 @@ class AdAccountController extends Controller
         return response()->json(['message' => 'Bad Request'], 400);
     }
 
+    public function loadAll(Request $request)
+    {
+        if ($request->ajax()) {
+            if (auth()->user()->role == 'customer') {
+                $adAccounts = AdAccount::where('client_id', auth()->user()->id)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            } else {
+                $adAccounts = AdAccount::orderBy('created_at', 'desc')->get();
+            }
+            return view('template.home.ad_account.load_more', compact('adAccounts'))->render();
+        }
+        return response()->json(['message' => 'Bad Request'], 400);
+    }
+
 
 
 
@@ -45,15 +62,17 @@ class AdAccountController extends Controller
     {
         if (auth()->user()->role == 'customer') {
             $loadMore = route('ad-accounts.load-more-pending');
+            $loadAll = route('ad-accounts.load-all-pending');
             $adAccounts = AdAccount::where('client_id', auth()->user()->id)
                 ->where('status', 'pending')
                 ->orderBy('created_at', 'desc')
                 ->paginate(50);
-            return view('template.home.ad_account.index', compact('adAccounts', 'loadMore'));
+            return view('template.home.ad_account.index', compact('adAccounts', 'loadMore', 'loadAll'));
         } else
             $loadMore = route('ad-accounts.load-more-pending');
+            $loadAll = route('ad-accounts.load-all-pending');
         $adAccounts = AdAccount::where('status', 'pending')->orderBy('created_at', 'desc')->paginate(50);
-        return view('template.home.ad_account.index', compact('adAccounts', 'loadMore'));
+        return view('template.home.ad_account.index', compact('adAccounts', 'loadMore', 'loadAll'));
     }
 
     public function loadMorePending(Request $request)
@@ -66,21 +85,41 @@ class AdAccountController extends Controller
         return response()->json(['message' => 'Bad Request'], 400);
     }
 
+    public function loadAllPending(Request $request)
+    {
+        if ($request->ajax()) {
+            if (auth()->user()->role == 'customer') {
+                $adAccounts = AdAccount::where('client_id', auth()->user()->id)
+                    ->where('status', 'pending')
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            } else {
+                $adAccounts = AdAccount::orderBy('created_at', 'desc')
+                    ->where('status', 'pending')
+                    ->get();
+            }
+            return view('template.home.ad_account.load_more', compact('adAccounts'))->render();
+        }
+        return response()->json(['message' => 'Bad Request'], 400);
+    }
+
 
 
     public function showApprovedAdAccounts()
     {
         if (auth()->user()->role == 'customer') {
             $loadMore = route('ad-accounts.load-more-approved');
+            $loadAll = route('ad-accounts.load-all-approved');
             $adAccounts = AdAccount::where('client_id', auth()->user()->id)
                 ->where('status', 'approved')
                 ->orderBy('created_at', 'desc')
                 ->paginate(50);
-            return view('template.home.ad_account.index', compact('adAccounts', 'loadMore'));
+            return view('template.home.ad_account.index', compact('adAccounts', 'loadMore', 'loadAll'));
         } else
             $loadMore = route('ad-accounts.load-more-approved');
+            $loadAll = route('ad-accounts.load-all-approved');
         $adAccounts = AdAccount::where('status', 'approved')->orderBy('created_at', 'desc')->paginate(50);
-        return view('template.home.ad_account.index', compact('adAccounts', 'loadMore'));
+        return view('template.home.ad_account.index', compact('adAccounts', 'loadMore', 'loadAll'));
     }
 
     public function loadMoreApproved(Request $request)
@@ -92,6 +131,27 @@ class AdAccountController extends Controller
         }
         return response()->json(['message' => 'Bad Request'], 400);
     }
+
+    public function loadAllApproved(Request $request)
+    {
+        if ($request->ajax()) {
+            if (auth()->user()->role == 'customer') {
+                $adAccounts = AdAccount::where('client_id', auth()->user()->id)
+                    ->where('status', 'approved')
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            } else {
+                $adAccounts = AdAccount::orderBy('created_at', 'desc')
+                    ->where('status', 'approved')
+                    ->get();
+            }
+            return view('template.home.ad_account.load_more', compact('adAccounts'))->render();
+        }
+        return response()->json(['message' => 'Bad Request'], 400);
+    }
+
+
+
 
     public function account()
     {

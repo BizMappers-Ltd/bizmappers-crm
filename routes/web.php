@@ -68,8 +68,13 @@ Route::patch('ad-account-application/{id}/status', [AdAccountController::class, 
 Route::get('/clients/{user}/ad-account', [AdAccountController::class, 'ad_account_id'])->middleware(['auth', 'verified'])->name('adaccount.adaccount');
 
 Route::get('ad-accounts/load-more', [AdAccountController::class, 'loadMore'])->name('ad-accounts.load-more');
+Route::get('ad-account-application/load-all', [AdAccountController::class, 'loadAll'])->middleware(['auth', 'verified'])->name('ad-accounts.load-all');
+
 Route::get('ad-accounts/load-more-pending', [AdAccountController::class, 'loadMorePending'])->name('ad-accounts.load-more-pending');
+Route::get('ad-account-application/load-all-pending', [AdAccountController::class, 'loadAllPending'])->middleware(['auth', 'verified'])->name('ad-accounts.load-all-pending');
+
 Route::get('ad-accounts/load-more-approved', [AdAccountController::class, 'loadMorePending'])->name('ad-accounts.load-more-approved');
+Route::get('ad-account-application/load-all-approved', [AdAccountController::class, 'loadAllApproved'])->middleware(['auth', 'verified'])->name('ad-accounts.load-all-approved');
 
 
 
