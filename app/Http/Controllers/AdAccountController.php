@@ -375,7 +375,7 @@ class AdAccountController extends Controller
             'notifiable_id' => $adAccount->client_id,
         ]);
 
-        return redirect()->route('ad-account.index')->with('success', 'Status updated successfully.');
+        return back()->with('success', 'Status updated successfully.');
     }
 
 

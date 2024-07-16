@@ -315,6 +315,6 @@ class RefillController extends Controller
         ]);
 
         // Redirect back with success message
-        return redirect()->route('refills.index')->with('success', 'Status updated successfully.');
+        return back()->with('success', 'Status updated successfully.');
     }
 }
