@@ -70,7 +70,7 @@ class AdAccountController extends Controller
             return view('template.home.ad_account.index', compact('adAccounts', 'loadMore', 'loadAll'));
         } else
             $loadMore = route('ad-accounts.load-more-pending');
-            $loadAll = route('ad-accounts.load-all-pending');
+        $loadAll = route('ad-accounts.load-all-pending');
         $adAccounts = AdAccount::where('status', 'pending')->orderBy('created_at', 'desc')->paginate(50);
         return view('template.home.ad_account.index', compact('adAccounts', 'loadMore', 'loadAll'));
     }
@@ -117,7 +117,7 @@ class AdAccountController extends Controller
             return view('template.home.ad_account.index', compact('adAccounts', 'loadMore', 'loadAll'));
         } else
             $loadMore = route('ad-accounts.load-more-approved');
-            $loadAll = route('ad-accounts.load-all-approved');
+        $loadAll = route('ad-accounts.load-all-approved');
         $adAccounts = AdAccount::where('status', 'approved')->orderBy('created_at', 'desc')->paginate(50);
         return view('template.home.ad_account.index', compact('adAccounts', 'loadMore', 'loadAll'));
     }
@@ -377,6 +377,33 @@ class AdAccountController extends Controller
 
         return back()->with('success', 'Status updated successfully.');
     }
+
+    // app/Http/Controllers/AdAccountController.php
+
+    public function updateStatusAjax(Request $request, $id)
+    {
+        if (auth()->user()->role == 'customer') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'status' => 'required|string|in:pending,in-review,approved,canceled,rejected',
+        ]);
+
+        $adAccount = AdAccount::findOrFail($id);
+        $adAccount->update([
+            'status' => $request->status,
+            'assign' => auth()->user()->name
+        ]);
+
+        SystemNotification::create([
+            'notification' => "Ad account {$adAccount->ad_acc_name} status changed to {$request->status} by " . auth()->user()->name,
+            'notifiable_id' => $adAccount->client_id,
+        ]);
+
+        return response()->json(['success' => 'Status updated successfully.', 'status' => $request->status]);
+    }
+
 
 
     public function transfer(Request $request, $id)

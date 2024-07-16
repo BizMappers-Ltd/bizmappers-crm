@@ -81,28 +81,18 @@
                                 <td>{{ $adAccount->dollar_rate }}৳</td>
                                 <td>{{ $adAccount->assign }}</td>
                                 <td class="text-center">
-                                    @if ($adAccount->status == 'pending')
-                                    <span class="badge custom-badge-info">Pending</span>
-                                    @endif
-                                    @if ($adAccount->status == 'in-review')
-                                    <span class="badge custom-badge-primary">In Review</span>
-                                    @endif
-                                    @if ($adAccount->status == 'approved')
-                                    <span class="badge custom-badge-success">Approved</span>
-                                    @endif
-                                    @if ($adAccount->status == 'rejected')
-                                    <span class="badge badge-danger px-3 py-1">Rejected</span>
-                                    @endif
-                                    @if ($adAccount->status == 'canceled')
-                                    <span class="badge badge-warning px-3 py-1 text-white">Canceled</span>
-                                    @endif
+                                    <span class="badge custom-badge-info {{ $adAccount->status == 'pending' ? '' : 'd-none' }}" id="badge-pending-{{ $adAccount->id }}">Pending</span>
+                                    <span class="badge custom-badge-primary {{ $adAccount->status == 'in-review' ? '' : 'd-none' }}" id="badge-in-review-{{ $adAccount->id }}">In Review</span>
+                                    <span class="badge custom-badge-success {{ $adAccount->status == 'approved' ? '' : 'd-none' }}" id="badge-approved-{{ $adAccount->id }}">Approved</span>
+                                    <span class="badge badge-danger px-3 py-1 {{ $adAccount->status == 'rejected' ? '' : 'd-none' }}" id="badge-rejected-{{ $adAccount->id }}">Rejected</span>
+                                    <span class="badge badge-warning px-3 py-1 text-white {{ $adAccount->status == 'canceled' ? '' : 'd-none' }}" id="badge-canceled-{{ $adAccount->id }}">Canceled</span>
                                 </td>
                                 @if (auth()->user()->role == 'admin' || auth()->user()->role == 'manager' || auth()->user()->role == 'employee')
                                 <td>
-                                    <form action="{{ route('ad-account.updateStatus', $adAccount->id) }}" method="post">
+                                    <form id="status-form-{{ $adAccount->id }}" action="javascript:void(0);">
                                         @csrf
                                         @method('PATCH')
-                                        <select name="status" class="form-select-sm custom-status" style="width: 90px;" onchange="this.form.submit()">
+                                        <select name="status" class="form-select-sm custom-status" style="width: 90px;" onchange="updateStatus({{ $adAccount->id }}, this.value)">
                                             <option value="pending" {{ $adAccount->status == 'pending' ? 'selected' : '' }}>Pending</option>
                                             <option value="in-review" {{ $adAccount->status == 'in-review' ? 'selected' : '' }}>In Review</option>
                                             <option value="approved" {{ $adAccount->status == 'approved' ? 'selected' : '' }}>Approved</option>
@@ -193,7 +183,7 @@
                             $('#loadMoreButton').text('Load More');
 
                             // Hide the buttons if no more pages to load
-                            if (page > {{$adAccounts->lastPage()}}) {
+                            if (page > {{ $adAccounts->lastPage()}}) {
                                 $('#loadMoreButton').hide();
                                 $('#viewAllButton').hide();
                             }
@@ -223,6 +213,30 @@
                 });
             }
         });
+
+        function updateStatus(adAccountId, status) {
+            $.ajax({
+                url: "{{ url('ad-account-application') }}/" + adAccountId + "/status-ajax",
+                type: 'PATCH',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    status: status
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Hide all badges in the specific row
+                        var row = $('#badge-pending-' + adAccountId).closest('tr');
+                        row.find('.badge').addClass('d-none');
+                        // Show the specific badge
+                        $('#badge-' + status + '-' + adAccountId).removeClass('d-none');
+                        alert(response.success);
+                    }
+                },
+                error: function(xhr) {
+                    alert('Something went wrong. Please try again.');
+                }
+            });
+        }
     </script>
 
 
