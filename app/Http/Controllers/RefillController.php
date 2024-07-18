@@ -109,8 +109,8 @@ class RefillController extends Controller
             'amount_taka' => 'nullable|numeric',
             'amount_dollar' => 'nullable|numeric',
             'payment_method' => 'required|string|max:255',
-
             'screenshot' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'new_date' => 'nullable|date', // Add validation for new_date
         ]);
 
         $data = $request->all();
@@ -119,15 +119,22 @@ class RefillController extends Controller
             $data['screenshot'] = $request->file('screenshot')->store('screenshots', 'public');
         }
 
-        Refill::create($data);
+        $refill = new Refill($data);
+
+        // Check if new_date is provided and set the created_at attribute
+        if ($request->filled('new_date')) {
+            $refill->created_at = $request->input('new_date');
+        }
+
+        $refill->save();
 
         SystemNotification::create([
             'notification' => "Refill request of amount " . $request->input('amount_dollar') . " for ad account submitted by " . auth()->user()->name
-
         ]);
 
         return redirect()->route('refills.index')->with('success', 'Refill application submitted successfully.');
     }
+
 
 
     public function show($id)

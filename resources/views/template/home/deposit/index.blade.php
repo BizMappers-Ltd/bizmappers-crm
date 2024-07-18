@@ -17,7 +17,13 @@
                 <div class="col-8">
                     <div class="card">
                         <div class="card-body">
-                            <h2 class="card-title">All Deposits</h2>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h4 class="card-title mr-4 mt-2">All Deposits</h4>
+
+                                <a href="{{ route('deposit.create') }}">
+                                    <button class="btn btn-sm btn-secondary text-white">New Deposit<i class="fa fa-plus color-muted m-r-5 ml-2"></i></button>
+                                </a>
+                            </div>
 
                             <!-- Search Field -->
                             <div class="mb-3 w-25">

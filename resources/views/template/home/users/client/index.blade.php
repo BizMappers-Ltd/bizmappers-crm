@@ -26,6 +26,12 @@
                     <input type="text" id="searchInput" class="form-control rounded" placeholder="Search...">
                 </div>
 
+                @if ($users->hasMorePages())
+                <div class="mb-3">
+                    <button class="btn btn-sm btn-secondary text-white" id="viewAllButton">View All</button>
+                </div>
+                @endif
+
                 @if (session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
@@ -102,38 +108,62 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            let page = 2; // Start from the second page since the first page is already loaded
+    $(document).ready(function() {
+        let page = 2; // Start from the second page since the first page is already loaded
 
-            $('#loadMoreButton').click(function() {
-                $.ajax({
-                    url: "{{ route('clients.load-more') }}",
-                    type: 'GET',
-                    data: {
-                        page: page
-                    },
-                    beforeSend: function() {
-                        $('#loadMoreButton').text('Loading...');
-                    },
-                    success: function(response) {
-                        if (response) {
-                            $('#clientsTableBody').append(response);
-                            page++;
-                            $('#loadMoreButton').text('Load More');
-
-                            // Hide the button if no more pages to load
-                            if (page > {{$users->lastPage()}}) {$('#loadMoreButton').hide();}
-                        } else {
-                            $('#loadMoreButton').text('No More Records');
-                        }
-                    },
-                    error: function() {
+        $('#loadMoreButton').click(function() {
+            $.ajax({
+                url: "{{ route('clients.load-more') }}",
+                type: 'GET',
+                data: { page: page },
+                beforeSend: function() {
+                    $('#loadMoreButton').text('Loading...');
+                },
+                success: function(response) {
+                    if (response) {
+                        $('#clientsTableBody').append(response);
+                        page++;
                         $('#loadMoreButton').text('Load More');
+
+                        // Hide the button if no more pages to load
+                        if (page > {{$users->lastPage()}}) {
+                            $('#loadMoreButton').hide();
+                            $('#viewAllButton').hide(); // Hide the View All button if all pages are loaded
+                        }
+                    } else {
+                        $('#loadMoreButton').text('No More Records');
                     }
-                });
+                },
+                error: function() {
+                    $('#loadMoreButton').text('Load More');
+                }
             });
         });
-    </script>
+
+        $('#viewAllButton').click(function() {
+            $.ajax({
+                url: "{{ route('clients.view-all') }}",
+                type: 'GET',
+                beforeSend: function() {
+                    $('#viewAllButton').text('Loading...');
+                },
+                success: function(response) {
+                    if (response) {
+                        $('#clientsTableBody').html(response);
+                        $('#loadMoreButton').hide(); // Hide the Load More button
+                        $('#viewAllButton').hide(); // Hide the View All button
+                    } else {
+                        $('#viewAllButton').text('No More Records');
+                    }
+                },
+                error: function() {
+                    $('#viewAllButton').text('View All');
+                }
+            });
+        });
+    });
+</script>
+
 
 </body>
 

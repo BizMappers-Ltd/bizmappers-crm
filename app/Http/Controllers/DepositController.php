@@ -46,10 +46,12 @@ class DepositController extends Controller
             'name' => 'required|string|max:255',
             'amount_usd' => 'required|numeric',
             'rate_bdt' => 'required|numeric',
-
+            'new_date' => 'nullable|date', // Add validation for new_date
         ]);
+
         $bdt = $request->amount_usd * $request->rate_bdt;
-        Deposit::create([
+
+        $deposit = new Deposit([
             'name' => $request->name,
             'amount_usd' => $request->amount_usd,
             'rate_bdt' => $request->rate_bdt,
@@ -57,14 +59,20 @@ class DepositController extends Controller
             'status' => 'pending',
         ]);
 
+        // Check if new_date is provided and set the created_at attribute
+        if ($request->filled('new_date')) {
+            $deposit->created_at = $request->input('new_date');
+        }
+
+        $deposit->save();
+
         SystemNotification::create([
-            'notification' => "Deposit of amount {$request->amount_usd} recived form{$request->name}, procesed by " . auth()->user()->name,
+            'notification' => "Deposit of amount {$request->amount_usd} received from {$request->name}, processed by " . auth()->user()->name,
         ]);
-
-
 
         return redirect()->route('deposits.index')->with('success', 'Deposit created successfully.');
     }
+
 
     public function show($id)
     {

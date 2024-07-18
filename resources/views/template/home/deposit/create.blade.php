@@ -41,7 +41,10 @@
                     <input type="number" step="0.01" name="rate_bdt" placeholder="Rate (BDT)" class="form-control rounded" required>
                 </div>
 
-
+                <div>
+                    <label class="col-form-label">Date</label>
+                    <input type="date" name="new_date" class="form-control rounded w-25">
+                </div>
 
                 <div class="d-flex justify-content-end mt-4">
                     <input type="submit" name="submit" value="Create Deposit" class="btn btn-sm btn-primary">

@@ -69,6 +69,8 @@ Route::put('clients/{id}', [UserController::class, 'updateClient'])->middleware(
 Route::delete('clients/{id}', [UserController::class, 'destroyClient'])->middleware(['auth', 'verified'])->name('client.destroy');
 
 Route::get('clients/load-more', [UserController::class, 'loadMoreClients'])->name('clients.load-more');
+Route::get('clients/view-all', [UserController::class, 'viewAllClients'])->name('clients.view-all');
+
 
 
 // Registration route for Admins

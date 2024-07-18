@@ -34,6 +34,16 @@ class UserController extends Controller
         return response()->json(['message' => 'Bad Request'], 400);
     }
 
+    public function viewAllClients(Request $request)
+    {
+        if ($request->ajax()) {
+            $users = User::where('role', 'customer')->orderBy('created_at', 'desc')->get();
+            return view('template.home.users.client.load_more', compact('users'))->render();
+        }
+        return response()->json(['message' => 'Bad Request'], 400);
+    }
+
+
     public function showClient($id)
     {
         if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'manager' &&  auth()->user()->role !== 'employee') {

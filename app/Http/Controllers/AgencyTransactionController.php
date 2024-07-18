@@ -25,6 +25,6 @@ class AgencyTransactionController extends Controller
             
         ]);
 
-        return redirect()->route('refills.index')->with('success', 'Deposit sent to agency successfully.');
+        return back()->with('success', 'Deposit sent to agency successfully.');
     }
 }

@@ -91,6 +91,12 @@
                         <input type="text" name="transaction_id" placeholder="Transaction Id" class="form-control rounded">
                     </div>
 
+
+                    <div>
+                        <label class="col-form-label">Date</label>
+                        <input type="date" name="new_date" class="form-control rounded w-25">
+                    </div>
+
                     <div class="mt-2">
                         <label class="col-form-label">Screenshot:</label>
                         <div class="custom-file">

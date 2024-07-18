@@ -148,6 +148,11 @@
                                     </div>
                                 </div>
 
+                                <div>
+                                    <label class="col-form-label">Date</label>
+                                    <input type="date" name="new_date" class="form-control rounded w-50">
+                                </div>
+
                                 <div class="d-flex justify-content-end mt-4">
                                     <input type="submit" name="submit" value="Refill" class="btn btn-primary">
                                 </div>
