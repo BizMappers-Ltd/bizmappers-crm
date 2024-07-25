@@ -224,6 +224,33 @@
                     });
                 }
             });
+
+            function sendToAgency(refillId) {
+                if (confirm('Are you sure you want to send this refill application to the agency?')) {
+                    const formId = `sendToAgencyForm_${refillId}`;
+                    const form = document.getElementById(formId);
+                    const token = form.querySelector('input[name="_token"]').value;
+
+                    fetch(`{{ url('refill/${refillId}/send-to-agency') }}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': token
+                            },
+                            body: JSON.stringify({})
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                form.innerHTML = '<span class="badge custom-badge-success" id="buttonText_' + refillId + '">Sent</span>';
+                                alert('Deposit sent to agency successfully.');
+                            } else {
+                                alert('There was an error sending the deposit to the agency.');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            }
         </script>
 
     </div>

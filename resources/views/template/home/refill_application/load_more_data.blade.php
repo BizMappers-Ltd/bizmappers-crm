@@ -10,15 +10,16 @@
     @if (auth()->user()->role == 'admin' || auth()->user()->role == 'manager' || auth()->user()->role == 'employee')
     <td class="text-center">
         @if ($refill->sent_to_agency == 0 && $refill->payment_method != 'Transferred')
-        <form action="{{ route('refill.sendToAgency', $refill->id) }}" method="post" style="display:inline-block;">
+        <form id="sendToAgencyForm_{{ $refill->id }}" style="display:inline-block;">
             @csrf
-            <button type="submit" class="btn btn-sm btn-primary" onclick="return confirm('Are you sure you want to send this refill application to the agency?')">
+            <button type="button" class="btn btn-sm btn-primary" onclick="sendToAgency({{ $refill->id }})">
                 Send to Agency
             </button>
         </form>
         @else
-        <span class="badge custom-badge-success" id="buttonText">Sent</span>
+        <span class="badge custom-badge-success" id="buttonText_{{ $refill->id }}">Sent</span>
         @endif
+
     </td>
     @endif
     <td>
@@ -52,7 +53,7 @@
                 <i class="fa fa-eye color-muted m-r-5"></i>
             </a>
             @if (auth()->user()->role == 'admin' || auth()->user()->role == 'manager')
-            
+
             <a href="{{ route('refills.edit', $refill->id) }}" data-toggle="tooltip" data-placement="top" title="Edit">
                 <i class="fa fa-pencil color-muted m-r-5 ml-3"></i>
             </a>

@@ -12,19 +12,17 @@ class AgencyTransactionController extends Controller
     public function sendToAgency($id)
     {
         if (auth()->user()->role == 'customer') {
-            return redirect('/');
+            return response()->json(['success' => false, 'message' => 'Unauthorized.']);
         }
-        
+
         $refill = Refill::findOrFail($id);
 
-
-        $refill->update(['sent_to_agency' => 1,'assign' => auth()->user()->name]);
+        $refill->update(['sent_to_agency' => 1, 'assign' => auth()->user()->name]);
 
         SystemNotification::create([
-            'notification' => "Refill amount of {$refill->amount_dollar} has been send to agency by " . auth()->user()->name,
-            
+            'notification' => "Refill amount of {$refill->amount_dollar} has been sent to agency by " . auth()->user()->name,
         ]);
 
-        return back()->with('success', 'Deposit sent to agency successfully.');
+        return response()->json(['success' => true, 'message' => 'Deposit sent to agency successfully.']);
     }
 }
