@@ -27,6 +27,11 @@ class RefillController extends Controller
                 ->where('payment_method', '!=', 'Transferred')
                 ->orderBy('created_at', 'desc');
 
+            $refillCount = Refill::with('client', 'adAccount')
+                ->where('client_id', auth()->user()->id)
+                ->where('payment_method', '!=', 'Transferred')
+                ->count();
+
             if ($request->has('start_date') && $request->has('end_date')) {
                 $startDate = $request->input('start_date');
                 $endDate = $request->input('end_date');
@@ -41,7 +46,7 @@ class RefillController extends Controller
                 return view('template.home.refill_application.filtered_data', compact('refills'))->render();
             }
 
-            return view('template.home.refill_application.index', compact('refills', 'customers', 'paymentMethods'));
+            return view('template.home.refill_application.index', compact('refills', 'refillCount', 'customers', 'paymentMethods'));
         } else {
             $customers = User::where('role', 'customer')->get();
             $paymentMethods = Settings::where('setting_name', 'Refill Payment Method')->get();
@@ -50,6 +55,10 @@ class RefillController extends Controller
                 ->where('payment_method', '!=', 'Transferred')
                 ->orderBy('created_at', 'desc');
 
+            $refillCount = Refill::with('client', 'adAccount')
+                ->where('payment_method', '!=', 'Transferred')
+                ->count();
+
             if ($request->has('start_date') && $request->has('end_date')) {
                 $startDate = $request->input('start_date');
                 $endDate = $request->input('end_date');
@@ -64,7 +73,7 @@ class RefillController extends Controller
                 return view('template.home.refill_application.filtered_data', compact('refills'))->render();
             }
 
-            return view('template.home.refill_application.index', compact('refills', 'customers', 'paymentMethods'));
+            return view('template.home.refill_application.index', compact('refills', 'refillCount', 'customers', 'paymentMethods'));
         }
     }
 
@@ -72,8 +81,14 @@ class RefillController extends Controller
 
     public function pending()
     {
-        $refills = Refill::where('status', 'pending')->orderBy('created_at', 'desc')->get();
-        return view('template.home.refill_application.pending', compact('refills'));
+        $refills = Refill::where('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->where('payment_method', '!=', 'Transferred')
+            ->get();
+        $refillCount = Refill::where('status', 'pending')
+            ->where('payment_method', '!=', 'Transferred')
+            ->count();
+        return view('template.home.refill_application.pending', compact('refills', 'refillCount'));
     }
     public function refill_application()
     {
@@ -219,7 +234,7 @@ class RefillController extends Controller
             'notification' => "Refill request status changed by " . auth()->user()->name
         ]);
 
-        return redirect()->route('dashboard');
+        return back();
     }
 
     public function reject(Request $request, $id)
@@ -235,7 +250,7 @@ class RefillController extends Controller
             'notification' => "Refill request status changed by " . auth()->user()->name
         ]);
 
-        return redirect()->route('dashboard');
+        return back();
     }
 
     public function destroy($id)

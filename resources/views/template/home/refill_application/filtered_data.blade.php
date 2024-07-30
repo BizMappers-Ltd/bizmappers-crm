@@ -81,7 +81,7 @@
 @if ($refills->hasMorePages())
 <tr>
     <td colspan="10" class="text-center">
-        <button class="btn load-more" data-page="{{ $refills->currentPage() + 1 }}">Load More</button>
+        <button class="btn btn-primary load-more" data-page="{{ $refills->currentPage() + 1 }}">Load More</button>
     </td>
 </tr>
 @endif

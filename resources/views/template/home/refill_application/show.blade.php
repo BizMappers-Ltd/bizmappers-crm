@@ -48,8 +48,7 @@
                             </div>
                             <div class="row">
                                 <b class="col-4">Status:</b>
-                                @if (auth()->user()->role == 'admin')
-
+                                @if (auth()->user()->role == 'admin' || auth()->user()->role == 'manager' || auth()->user()->role == 'employee')
 
                                     <form action="{{ route('refills.updateStatus', $refill->id) }}" method="post">
                                         @csrf
@@ -71,8 +70,6 @@
                                     @if ($refill->status == 'pending')
                                         <span class="badge custom-badge-info">Pending</span>
                                     @endif
-
-
 
                                     @if ($refill->status == 'approved')
                                         <span class="badge custom-badge-success">Approved</span>

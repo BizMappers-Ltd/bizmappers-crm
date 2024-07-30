@@ -15,7 +15,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h4 class="card-title mr-4 mt-2">Refill Applications</h4>
+                    <h4 class="card-title mr-4 mt-2">Refill Applications <span>( {{$refillCount}} )</span></h4>
 
                     @if (auth()->user()->role == 'customer')
                     <a href="{{ route('refills.newRefill', auth()->user()->id) }}">
@@ -226,30 +226,29 @@
             });
 
             function sendToAgency(refillId) {
-                if (confirm('Are you sure you want to send this refill application to the agency?')) {
-                    const formId = `sendToAgencyForm_${refillId}`;
-                    const form = document.getElementById(formId);
-                    const token = form.querySelector('input[name="_token"]').value;
 
-                    fetch(`{{ url('refill/${refillId}/send-to-agency') }}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': token
-                            },
-                            body: JSON.stringify({})
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                form.innerHTML = '<span class="badge custom-badge-success" id="buttonText_' + refillId + '">Sent</span>';
-                                alert('Deposit sent to agency successfully.');
-                            } else {
-                                alert('There was an error sending the deposit to the agency.');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                }
+                const formId = `sendToAgencyForm_${refillId}`;
+                const form = document.getElementById(formId);
+                const token = form.querySelector('input[name="_token"]').value;
+
+                fetch(`{{ url('refill/${refillId}/send-to-agency') }}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            form.innerHTML = '<span class="badge custom-badge-success" id="buttonText_' + refillId + '">Sent</span>';
+                            
+                        } else {
+                            alert('There was an error sending the deposit to the agency.');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
             }
         </script>
 
