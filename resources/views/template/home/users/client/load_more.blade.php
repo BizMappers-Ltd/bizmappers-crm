@@ -1,6 +1,7 @@
 @foreach ($users as $user)
 <tr>
     <td>{{ $user->name }}</td>
+    <td>{{ $user->username }}</td>
     <td>{{ $user->business_name }}</td>
     <td>{{ $user->phone }}</td>
     <td>{{ $user->email }}</td>

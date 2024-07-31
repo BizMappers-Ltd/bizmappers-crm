@@ -41,6 +41,7 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
+                                <th>Username</th>
                                 <th>Email</th>
 
                                 <th>Actions</th>
@@ -50,8 +51,8 @@
                             @foreach ($users as $user)
                             <tr>
                                 <td>{{ $user->name }}</td>
+                                <td>{{ $user->username }}</td>
                                 <td>{{ $user->email }}</td>
-
 
                                 <td>
                                     <span class="d-flex align-items-center">

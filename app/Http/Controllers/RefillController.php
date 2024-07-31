@@ -18,7 +18,7 @@ class RefillController extends Controller
     public function index(Request $request)
     {
         if (auth()->user()->role == 'customer') {
-            $customers = User::where('role', 'customer')
+            $customers = User::where('id', auth()->user()->id)
                 ->get();
             $paymentMethods = Settings::where('setting_name', 'Refill Payment Method')->get();
 
@@ -76,7 +76,6 @@ class RefillController extends Controller
             return view('template.home.refill_application.index', compact('refills', 'refillCount', 'customers', 'paymentMethods'));
         }
     }
-
 
 
     public function pending()

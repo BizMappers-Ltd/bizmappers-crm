@@ -60,6 +60,11 @@
                         <label class="col-form-label">Employee Name:</label>
                         <input value="{{ $employee->name }}" class="form-control rounded" type="text" name="name" placeholder="employee Name" required />
                     </div>
+                    
+                    <div class="">
+                        <label class="col-form-label">Username:</label>
+                        <input value="{{ $employee->username }}" class="form-control rounded" type="text" name="username" placeholder="employee Name" required />
+                    </div>
 
                     <div class="">
                         <label class="col-form-label">Employee Email:</label>

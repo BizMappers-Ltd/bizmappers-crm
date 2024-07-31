@@ -34,6 +34,10 @@
                                 <p class="col-7">{{ $user->name }}</p>
                             </div>
                             <div class="row">
+                                <b class="col-5">User Name:</b>
+                                <p class="col-7">{{ $user->username }}</p>
+                            </div>
+                            <div class="row">
                                 <b class="col-5">Phone Number:</b>
                                 <p class="col-7">{{ $user->phone }}</p>
                             </div>

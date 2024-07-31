@@ -60,6 +60,11 @@
                         <label class="col-form-label">Admin Name:</label>
                         <input value="{{ $admin->name }}" class="form-control rounded" type="text" name="name" placeholder="Admin Name" required />
                     </div>
+                    
+                    <div class="">
+                        <label class="col-form-label">Username:</label>
+                        <input value="{{ $admin->username }}" class="form-control rounded" type="text" name="username" placeholder="Admin Name" required />
+                    </div>
 
                     <div class="">
                         <label class="col-form-label">Admin Email:</label>

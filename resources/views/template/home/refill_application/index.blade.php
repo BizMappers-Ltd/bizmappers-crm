@@ -17,15 +17,9 @@
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h4 class="card-title mr-4 mt-2">Refill Applications <span>( {{$refillCount}} )</span></h4>
 
-                    @if (auth()->user()->role == 'customer')
-                    <a href="{{ route('refills.newRefill', auth()->user()->id) }}">
-                        <button class="btn btn-sm btn-secondary text-white">New Refill<i class="fa fa-plus color-muted m-r-5 ml-2"></i></button>
-                    </a>
-                    @else
                     <a href="#" data-toggle="modal" data-target="#refillModal">
                         <button class="btn btn-sm btn-secondary text-white">New Refill<i class="fa fa-plus color-muted m-r-5 ml-2"></i></button>
                     </a>
-                    @endif
                 </div>
 
                 <div class="row">

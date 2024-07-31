@@ -121,6 +121,7 @@ class UserController extends Controller
         $manager = User::findOrFail($id);
         $manager->update([
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -166,6 +167,7 @@ class UserController extends Controller
         $employee = User::findOrFail($id);
         $employee->update([
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -212,6 +214,7 @@ class UserController extends Controller
         $admin = User::findOrFail($id);
         $admin->update([
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
