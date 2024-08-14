@@ -32,14 +32,6 @@ class RefillController extends Controller
                 ->where('payment_method', '!=', 'Transferred')
                 ->count();
 
-            if ($request->has('start_date') && $request->has('end_date')) {
-                $startDate = $request->input('start_date');
-                $endDate = $request->input('end_date');
-
-                // Ensure the query works even if start date and end date are the same
-                $query->whereBetween('created_at', [$startDate, $endDate . ' 23:59:59']);
-            }
-
             $refills = $query->paginate(50); // Adjust the number of items per page as needed
 
             if ($request->ajax()) {
@@ -59,14 +51,6 @@ class RefillController extends Controller
                 ->where('payment_method', '!=', 'Transferred')
                 ->count();
 
-            if ($request->has('start_date') && $request->has('end_date')) {
-                $startDate = $request->input('start_date');
-                $endDate = $request->input('end_date');
-
-                // Ensure the query works even if start date and end date are the same
-                $query->whereBetween('created_at', [$startDate, $endDate . ' 23:59:59']);
-            }
-
             $refills = $query->paginate(50); // Adjust the number of items per page as needed
 
             if ($request->ajax()) {
@@ -74,6 +58,67 @@ class RefillController extends Controller
             }
 
             return view('template.home.refill_application.index', compact('refills', 'refillCount', 'customers', 'paymentMethods'));
+        }
+    }
+
+    public function generateDateRangeRefill(Request $request)
+    {
+
+        if (auth()->user()->role == 'customer') {
+            $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
+            $endDate = Carbon::parse($request->input('end_date'))->endOfDay();
+            $customers = User::where('id', auth()->user()->id)
+                ->get();
+            $paymentMethods = Settings::where('setting_name', 'Refill Payment Method')->get();
+
+            $query = Refill::with('client', 'adAccount')
+                ->whereBetween('refills.created_at', [$startDate, $endDate])
+                ->where('client_id', auth()->user()->id)
+                ->where('payment_method', '!=', 'Transferred')
+                ->orderBy('created_at', 'desc');
+
+            $refillCount = Refill::with('client', 'adAccount')
+                ->whereBetween('refills.created_at', [$startDate, $endDate])
+                ->where('client_id', auth()->user()->id)
+                ->where('payment_method', '!=', 'Transferred')
+                ->count();
+
+            $refills = $query->get(); // Adjust the number of items per page as needed
+
+            return view('template.home.refill_application.index_date_range', [
+                'refills' => $refills,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'refillCount' => $refillCount,
+                'customers' => $customers,
+                'paymentMethods' => $paymentMethods,
+            ]);
+        } else {
+            $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
+            $endDate = Carbon::parse($request->input('end_date'))->endOfDay();
+            $customers = User::where('role', 'customer')->get();
+            $paymentMethods = Settings::where('setting_name', 'Refill Payment Method')->get();
+
+            $query = Refill::whereBetween('refills.created_at', [$startDate, $endDate])
+                ->with('client', 'adAccount')
+                ->where('payment_method', '!=', 'Transferred')
+                ->orderBy('created_at', 'desc');
+
+            $refillCount = Refill::whereBetween('refills.created_at', [$startDate, $endDate])
+                ->with('client', 'adAccount')
+                ->where('payment_method', '!=', 'Transferred')
+                ->count();
+
+            $refills = $query->get(); // Adjust the number of items per page as needed
+
+            return view('template.home.refill_application.index_date_range', [
+                'refills' => $refills,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'refillCount' => $refillCount,
+                'customers' => $customers,
+                'paymentMethods' => $paymentMethods,
+            ]);
         }
     }
 
@@ -281,7 +326,7 @@ class RefillController extends Controller
     {
         // Redirect customer role to home page
         if (auth()->user()->role == 'customer') {
-            return redirect('/');
+            return response()->json(['error' => 'Unauthorized'], 403);
         }
 
         // Validate the request
@@ -335,7 +380,7 @@ class RefillController extends Controller
             'notification' => "Refill request status changed by " . auth()->user()->name
         ]);
 
-        // Redirect back with success message
-        return back()->with('success', 'Status updated successfully.');
+        // Respond with success message
+        return response()->json(['success' => 'Status updated successfully.']);
     }
 }

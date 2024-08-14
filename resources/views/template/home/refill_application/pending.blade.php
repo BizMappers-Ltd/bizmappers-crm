@@ -19,14 +19,9 @@
 
                 </div>
 
-                <div class="row">
-                    <!-- Date Range Filter -->
-
-
-                    <!-- Search Field -->
-                    <div class="col-md-9 mb-3">
-                        <input type="text" id="searchInput" class="form-control rounded" placeholder="Search...">
-                    </div>
+                <!-- Search Field -->
+                <div class="w-25 mb-3">
+                    <input type="text" id="searchInput" class="form-control rounded" placeholder="Search...">
                 </div>
 
                 @if (session('success'))
@@ -56,7 +51,7 @@
                         <tbody id="table-body">
                             @foreach ($refills as $refill)
                             <tr>
-                                <td>{{ $refill->created_at->format('j F Y || g:i a') }}</td>
+                                <td>{{ $refill->created_at->format('j F Y  g:i a') }}</td>
                                 <td>{{ $refill->adAccount->ad_acc_name }}</td>
                                 <td>{{ $refill->adAccount->dollar_rate }}</td>
                                 <td>{{ $refill->amount_dollar }}</td>
@@ -79,16 +74,13 @@
                                 @endif
                                 <td>
                                     @if (auth()->user()->role == 'admin' || auth()->user()->role == 'manager' || auth()->user()->role == 'employee')
-                                    <form action="{{ route('refills.updateStatus', $refill->id) }}" method="post">
+                                    <form id="updateStatusForm_{{ $refill->id }}" action="{{ route('refills.updateStatus', $refill->id) }}" method="post">
                                         @csrf
                                         @method('PATCH')
-                                        <select name="status" class="form-select-sm custom-status" style="width: 90px;" onchange="this.form.submit()">
-                                            <option value="pending" {{ $refill->status == 'pending' ? 'selected' : '' }}>Pending
-                                            </option>
-                                            <option value="approved" {{ $refill->status == 'approved' ? 'selected' : '' }}>Approved
-                                            </option>
-                                            <option value="rejected" {{ $refill->status == 'rejected' ? 'selected' : '' }}>Rejected
-                                            </option>
+                                        <select name="status" class="form-select-sm custom-status" style="width: 90px;" onchange="updateStatus({{ $refill->id }}, this.value)">
+                                            <option value="pending" {{ $refill->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="approved" {{ $refill->status == 'approved' ? 'selected' : '' }}>Approved</option>
+                                            <option value="rejected" {{ $refill->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
                                         </select>
                                     </form>
                                     @elseif(auth()->user()->role == 'customer')
@@ -108,10 +100,12 @@
                                         <a href="{{ route('refills.show', $refill->id) }}" data-toggle="tooltip" data-placement="top" title="View">
                                             <i class="fa fa-eye color-muted m-r-5"></i>
                                         </a>
-                                        @if (auth()->user()->role == 'admin')
+                                        @if (auth()->user()->role == 'admin' || auth()->user()->role == 'manager')
                                         <a href="{{ route('refills.edit', $refill->id) }}" data-toggle="tooltip" data-placement="top" title="Edit">
                                             <i class="fa fa-pencil color-muted m-r-5 ml-3"></i>
                                         </a>
+                                        @endif
+                                        @if (auth()->user()->role == 'admin')
                                         <div class="basic-dropdown ml-2">
                                             <div class="dropdown">
                                                 <i class="fa-solid fa-ellipsis btn btn-sm" data-toggle="dropdown"></i>
@@ -145,38 +139,11 @@
         @include('template.home.layouts.scripts')
         @include('template.home.custom_scripts.refill_application_script')
         @include('template.home.custom_scripts.search_script')
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
         <script>
             $(document).ready(function() {
-                $('#dateRange').daterangepicker({
-                    locale: {
-                        format: 'YYYY-MM-DD'
-                    }
-                });
-
-                $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
-                    let startDate = picker.startDate.format('YYYY-MM-DD');
-                    let endDate = picker.endDate.format('YYYY-MM-DD');
-                    fetchRefillData(startDate, endDate);
-                });
-
-                function fetchRefillData(startDate, endDate) {
-                    $.ajax({
-                        url: "{{ route('refills.filter') }}",
-                        type: "GET",
-                        data: {
-                            start_date: startDate,
-                            end_date: endDate
-                        },
-                        success: function(data) {
-                            $('#table-body').html(data);
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            alert('Server error');
-                        }
-                    });
-                }
 
                 $(document).on('click', '.load-more', function() {
                     var page = $(this).data('page');
@@ -221,12 +188,29 @@
                     .then(data => {
                         if (data.success) {
                             form.innerHTML = '<span class="badge custom-badge-success" id="buttonText_' + refillId + '">Sent</span>';
-                            
+
                         } else {
                             alert('There was an error sending the deposit to the agency.');
                         }
                     })
                     .catch(error => console.error('Error:', error));
+            }
+
+            function updateStatus(refillId, status) {
+                $.ajax({
+                    url: '/refills/' + refillId + '/status',
+                    type: 'PATCH',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        status: status
+                    },
+                    success: function(response) {
+                        alert('Status updated successfully.');
+                    },
+                    error: function(xhr) {
+                        alert('An error occurred while updating the status.');
+                    }
+                });
             }
         </script>
 

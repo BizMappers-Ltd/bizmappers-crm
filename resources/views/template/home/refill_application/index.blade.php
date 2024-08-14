@@ -22,16 +22,36 @@
                     </a>
                 </div>
 
-                <div class="row">
-                    <!-- Date Range Filter -->
-                    <div class="col-md-3 mb-3">
-                        <input type="text" id="dateRange" class="form-control rounded" placeholder="Select Date Range">
-                    </div>
+                <!-- Search Field -->
+                <div class="w-25 mb-3">
+                    <input type="text" id="searchInput" class="form-control rounded" placeholder="Search...">
+                </div>
 
-                    <!-- Search Field -->
-                    <div class="col-md-9 mb-3">
-                        <input type="text" id="searchInput" class="form-control rounded" placeholder="Search...">
-                    </div>
+                <div>
+                    <form action="{{ route('refills.date.generate') }}" method="POST">
+                        @csrf
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <div class="input-group date" id="startDatePicker">
+                                    <input type="text" class="form-control" name="start_date" placeholder="Start Date" required>
+                                    <span class="input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="input-group date" id="endDatePicker">
+                                    <input type="text" class="form-control" name="end_date" placeholder="End Date" required>
+                                    <span class="input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary">Date Range Search</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
                 @if (session('success'))
@@ -161,38 +181,21 @@
         @include('template.home.layouts.scripts')
         @include('template.home.custom_scripts.refill_application_script')
         @include('template.home.custom_scripts.search_script')
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
         <script>
             $(document).ready(function() {
-                $('#dateRange').daterangepicker({
-                    locale: {
-                        format: 'YYYY-MM-DD'
-                    }
+                $('#startDatePicker').datepicker({
+                    format: 'yyyy-mm-dd',
+                    autoclose: true
                 });
-
-                $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
-                    let startDate = picker.startDate.format('YYYY-MM-DD');
-                    let endDate = picker.endDate.format('YYYY-MM-DD');
-                    fetchRefillData(startDate, endDate);
+                $('#endDatePicker').datepicker({
+                    format: 'yyyy-mm-dd',
+                    autoclose: true
                 });
-
-                function fetchRefillData(startDate, endDate) {
-                    $.ajax({
-                        url: "{{ route('refills.filter') }}",
-                        type: "GET",
-                        data: {
-                            start_date: startDate,
-                            end_date: endDate
-                        },
-                        success: function(data) {
-                            $('#table-body').html(data);
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            alert('Server error');
-                        }
-                    });
-                }
 
                 $(document).on('click', '.load-more', function() {
                     var page = $(this).data('page');
@@ -237,12 +240,29 @@
                     .then(data => {
                         if (data.success) {
                             form.innerHTML = '<span class="badge custom-badge-success" id="buttonText_' + refillId + '">Sent</span>';
-                            
+
                         } else {
                             alert('There was an error sending the deposit to the agency.');
                         }
                     })
                     .catch(error => console.error('Error:', error));
+            }
+
+            function updateStatus(refillId, status) {
+                $.ajax({
+                    url: '/refills/' + refillId + '/status',
+                    type: 'PATCH',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        status: status
+                    },
+                    success: function(response) {
+                        alert('Status updated successfully.');
+                    },
+                    error: function(xhr) {
+                        alert('An error occurred while updating the status.');
+                    }
+                });
             }
         </script>
 

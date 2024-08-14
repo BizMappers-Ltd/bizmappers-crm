@@ -21,11 +21,11 @@
                         <div class="card-body">
                             <div class="d-flex align-items-center justify-content-between mb-3">
                                 <h4 class="card-title mr-4 mt-2">Detailed refill information of
-                                    {{ $refill->adAccount->ad_acc_name }}</h4>
-                                    @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager')
+                                    {{ $refill->adAccount->ad_acc_name }}
+                                </h4>
+                                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager')
                                 <a href="{{ route('refills.edit', $refill->id) }}">
-                                    <button class="btn btn-sm btn-secondary text-white">Edit Info<i
-                                            class="fa fa-pencil color-muted m-r-5 ml-2"></i></button>
+                                    <button class="btn btn-sm btn-secondary text-white">Edit Info<i class="fa fa-pencil color-muted m-r-5 ml-2"></i></button>
                                 </a>
                                 @endif
                             </div>
@@ -50,43 +50,35 @@
                                 <b class="col-4">Status:</b>
                                 @if (auth()->user()->role == 'admin' || auth()->user()->role == 'manager' || auth()->user()->role == 'employee')
 
-                                    <form action="{{ route('refills.updateStatus', $refill->id) }}" method="post">
-                                        @csrf
-                                        @method('PATCH')
-                                        <select name="status" class="form-select-sm" onchange="this.form.submit()">
-                                            <option
-                                                class="{{ $refill->status == 'approved' || $refill->status == 'rejected' ? 'd-none' : '' }}"
-                                                value="pending" {{ $refill->status == 'pending' ? 'selected' : '' }}>
-                                                Pending</option>
-                                            <option class="{{ $refill->status == 'rejected' ? 'd-none' : '' }}"
-                                                value="approved" {{ $refill->status == 'approved' ? 'selected' : '' }}>
-                                                Approved</option>
-                                            <option class="{{ $refill->status == 'approved' ? 'd-none' : '' }}"
-                                                value="rejected" {{ $refill->status == 'rejected' ? 'selected' : '' }}>
-                                                Rejected</option>
-                                        </select>
-                                    </form>
+                                <form id="updateStatusForm_{{ $refill->id }}" action="{{ route('refills.updateStatus', $refill->id) }}" method="post">
+                                    @csrf
+                                    @method('PATCH')
+                                    <select name="status" class="form-select-sm custom-status" style="width: 90px;" onchange="updateStatus({{ $refill->id }}, this.value)">
+                                        <option value="pending" {{ $refill->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                        <option value="approved" {{ $refill->status == 'approved' ? 'selected' : '' }}>Approved</option>
+                                        <option value="rejected" {{ $refill->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                                    </select>
+                                </form>
                                 @elseif(auth()->user()->role == 'customer')
-                                    @if ($refill->status == 'pending')
-                                        <span class="badge custom-badge-info">Pending</span>
-                                    @endif
+                                @if ($refill->status == 'pending')
+                                <span class="badge custom-badge-info">Pending</span>
+                                @endif
 
-                                    @if ($refill->status == 'approved')
-                                        <span class="badge custom-badge-success">Approved</span>
-                                    @endif
+                                @if ($refill->status == 'approved')
+                                <span class="badge custom-badge-success">Approved</span>
+                                @endif
 
-                                    @if ($refill->status == 'rejected')
-                                        <span class="badge badge-danger px-3 py-1">Rejected</span>
-                                    @endif
+                                @if ($refill->status == 'rejected')
+                                <span class="badge badge-danger px-3 py-1">Rejected</span>
+                                @endif
                                 @endif
                             </div>
 
                             @if ($refill->screenshot)
-                                <div class="row">
-                                    <b class="col-4">Screenshot:</b><br>
-                                </div>
-                                <img src="{{ asset('storage/' . $refill->screenshot) }}" height="1050px" width="350px"
-                                    alt="Screenshot" class="img-fluid">
+                            <div class="row">
+                                <b class="col-4">Screenshot:</b><br>
+                            </div>
+                            <img src="{{ asset('storage/' . $refill->screenshot) }}" height="1050px" width="350px" alt="Screenshot" class="img-fluid">
                             @endif
 
                         </div>
@@ -129,6 +121,26 @@
     @include('template.home.layouts.footer')
 
     @include('template.home.layouts.scripts')
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function updateStatus(refillId, status) {
+            $.ajax({
+                url: '/refills/' + refillId + '/status',
+                type: 'PATCH',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    status: status
+                },
+                success: function(response) {
+                    alert('Status updated successfully.');
+                },
+                error: function(xhr) {
+                    alert('An error occurred while updating the status.');
+                }
+            });
+        }
+    </script>
 
 </body>
 

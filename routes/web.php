@@ -94,6 +94,8 @@ Route::get('ad-account/{id}/details', [RefillController::class, 'getAdAccountDet
 Route::get('refill-application', [RefillController::class, 'refill_application'])->middleware(['auth', 'verified'])->name('refill-application');
 Route::get('/refills/filter', [RefillController::class, 'index'])->middleware(['auth', 'verified'])->name('refills.filter');
 
+Route::post('/refills/generate-daterange-refill', [RefillController::class, 'generateDateRangeRefill'])->middleware(['auth', 'verified'])->name('refills.date.generate');
+
 
 // new refill for customer
 Route::get('refill-application/{id}/new', [RefillController::class, 'newRefill'])->middleware(['auth', 'verified'])->name('refills.newRefill');

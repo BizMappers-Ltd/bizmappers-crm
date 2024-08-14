@@ -23,15 +23,13 @@
     @endif
     <td>
         @if (auth()->user()->role == 'admin' || auth()->user()->role == 'manager' || auth()->user()->role == 'employee')
-        <form action="{{ route('refills.updateStatus', $refill->id) }}" method="post">
+        <form id="updateStatusForm_{{ $refill->id }}" action="{{ route('refills.updateStatus', $refill->id) }}" method="post">
             @csrf
             @method('PATCH')
-            <select name="status" class="form-select-sm custom-status" style="width: 90px;" onchange="this.form.submit()">
+            <select name="status" class="form-select-sm custom-status" style="width: 90px;" onchange="updateStatus({{ $refill->id }}, this.value)">
                 <option value="pending" {{ $refill->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="approved" {{ $refill->status == 'approved' ? 'selected' : '' }}>Approved
-                </option>
-                <option value="rejected" {{ $refill->status == 'rejected' ? 'selected' : '' }}>Rejected
-                </option>
+                <option value="approved" {{ $refill->status == 'approved' ? 'selected' : '' }}>Approved</option>
+                <option value="rejected" {{ $refill->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
             </select>
         </form>
         @elseif(auth()->user()->role == 'customer')
@@ -56,7 +54,6 @@
                 <i class="fa fa-pencil color-muted m-r-5 ml-3"></i>
             </a>
             @endif
-
             @if (auth()->user()->role == 'admin')
             <div class="basic-dropdown ml-2">
                 <div class="dropdown">
