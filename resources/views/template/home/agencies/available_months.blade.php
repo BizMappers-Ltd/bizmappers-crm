@@ -17,7 +17,7 @@
             <div class="card">
                 <div class="card-body">
 
-                    <h4 class="card-title mr-4 mt-2">Month Wise Agency Report</h4>
+                    <h4 class="card-title mr-4 mt-2">Date Range Wise Agency Report</h4>
 
                     <div>
                         <form action="{{ route('agency.report.generate') }}" method="POST">
@@ -105,7 +105,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="monthlyReportModalLabel">Month Wise Ad Account Report</h5>
+                        <h5 class="modal-title" id="monthlyReportModalLabel">Monthly Agency Report</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

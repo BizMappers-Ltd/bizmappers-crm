@@ -35,7 +35,7 @@
             <div class="p-4">
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="card-title">Date Wise Ad Account Report</h2>
+                        <h2 class="card-title">Date Range Wise Ad Account Report</h2>
 
                         <div>
 
@@ -151,7 +151,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="monthlyReportModalLabel">Month Wise Ad Account Report</h5>
+                            <h5 class="modal-title" id="monthlyReportModalLabel">Monthly Ad Account Report</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

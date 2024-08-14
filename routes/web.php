@@ -168,6 +168,7 @@ Route::get('/monthly-report/{year}/{month}/pdf', [ReportController::class,'downl
 
 Route::post('/agency-report', [ReportController::class,'agencyReportGenerate'])->middleware(['auth', 'verified'])->name('agency.report.generate');
 
+Route::get('agency/{agencyId}/{year}-{month}', [ReportController::class, 'agencyMonthlyRefills'])->middleware(['auth', 'verified'])->name('agency.monthlyRefills');
 
 
 

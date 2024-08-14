@@ -2,6 +2,7 @@
 <tr>
     <td>{{ $refill->created_at->format('j F Y  g:i a') }}</td>
     <td>{{ $refill->adAccount->ad_acc_name }}</td>
+    <td>{{ $refill->adAccount->agency->agency_name }}</td>
     <td>{{ $refill->adAccount->dollar_rate }}</td>
     <td>{{ $refill->amount_dollar }}</td>
     <td>{{ $refill->amount_taka }}</td>

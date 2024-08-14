@@ -53,6 +53,7 @@
                                             <th scope="col">Total Refill (usd)</th>
                                             <th scope="col">Income (tk)</th>
                                             <th scope="col">Margin (Per USD)</th>
+                                            <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -63,6 +64,7 @@
                                             <td>$ {{ number_format($agency->total_refill_dollar, 2) }}</td>
                                             <td>৳ {{ number_format($agency->total_income_tk, 2) }}</td>
                                             <td>{{ number_format($agency->total_income_tk/$agency->total_refill_dollar, 2) }}</td>
+                                            <td><a href="{{ route('agency.monthlyRefills', ['agencyId' => $agency->agency_id, 'year' => $year, 'month' => $month]) }}"><button class="btn btn-sm btn-primary">View Refills</button></a></td>
                                         </tr>
                                         @endforeach
                                     </tbody>

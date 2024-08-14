@@ -66,6 +66,7 @@
                             <tr>
                                 <th>Date Time</th>
                                 <th>Ad Account Name</th>
+                                <th>Agency Name</th>
                                 <th>Dollar Rate</th>
                                 <th>Amount (Dollar)</th>
                                 <th>Amount (Taka)</th>

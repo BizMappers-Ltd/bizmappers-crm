@@ -94,11 +94,13 @@ class ReportController extends Controller
 
     public function monthlyReportAdAccount()
     {
-        $monthsWithData = AgencyTransaction::select(
+        $monthsWithData = Refill::select(
             DB::raw('YEAR(created_at) as year'),
             DB::raw('MONTH(created_at) as month')
         )
             ->groupBy('year', 'month')
+            ->where('refills.payment_method', '!=', 'Transferred')
+            ->where('refills.status', 'approved')
             ->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->get();
@@ -261,6 +263,8 @@ class ReportController extends Controller
         $monthsWithData = DB::table('refills')
             ->select(DB::raw('YEAR(created_at) as year'), DB::raw('MONTH(created_at) as month'))
             ->groupBy('year', 'month')
+            ->where('refills.payment_method', '!=', 'Transferred')
+            ->where('refills.status', 'approved')
             ->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->get();
@@ -311,6 +315,7 @@ class ReportController extends Controller
             $agency = $refill->adAccount->agency;
             if (!isset($agencies[$agency->id])) {
                 $agencies[$agency->id] = (object) [
+                    'agency_id' => $agency->id,
                     'agency_name' => $agency->agency_name,
                     'total_refill_taka' => 0,
                     'total_refill_dollar' => 0,
@@ -329,6 +334,28 @@ class ReportController extends Controller
 
         return view('template.home.agencies.monthly_report', ['agencies' => $agencies, 'year' => $year, 'month' => $month]);
     }
+
+    public function agencyMonthlyRefills($agencyId, $year, $month)
+    {
+        // Fetch agency information
+        $agency = Agencies::findOrFail($agencyId);
+
+        // Fetch refills and transactions for the agency in the specified month and year
+        $refills = Refill::with('adAccount')
+            ->whereHas('adAccount', function ($query) use ($agencyId) {
+                $query->where('agency_id', $agencyId);
+            })
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->select('refills.*')
+            ->where('refills.payment_method', '!=', 'Transferred')
+            ->where('refills.status', 'approved')
+            ->orderBy('refills.created_at', 'desc')
+            ->get();
+
+        return view('template.home.agencies.agency_monthly_refills', compact('agency', 'refills', 'year', 'month'));
+    }
+
 
 
     public function agencyReportGenerate(Request $request)
